@@ -96,7 +96,8 @@
 
     <section title="Introduction">
       <t>
-	This document specifies a TLS extension to convey a 
+	This document specifies a <xref target="RFC6066">
+	Transport Layer Security (TLS) extension</xref> to convey a 
 	<xref target="RFC6698">DANE</xref>
 	Client Identity to the TLS server. This is useful for 
 	applications that perform TLS client certificate verification 
@@ -141,10 +142,9 @@
     <section title="DANE Client Identity Extension">
       <t>
 	The "extension_data" field of the DANE Client Identity
-	extension MUST contain one or more client names specified 
-	in the following format. Typically clients will present
-	only one name, although a list of names is supported
-	[Question: should we limit this to only one name?]:
+	extension MUST contain a client name specified in the 
+	following format. [Question: should multiple client names
+	be supported?]
       </t>
 
       <figure>
@@ -168,23 +168,25 @@ struct {
       </figure>
 
       <t>
-	The opaque dNSName and SRVName fields contain the domain name
+	The opaque dNSName or SRVName field contains the domain name
 	of the client in textual presentation format, as described in
 	<xref target="RFC1035">RFC 1035</xref>.
       </t>
       <t>
-	[Question: Is the dNSName/SRVName distinction useful, or
-	can we just simplify and use only dNSName? For the X.509
-	cert case, the server could use this distinction to do
-	another check in the appropriate subject alt name of the
-	cert for the name (but should it?). For raw public keys,
-	it doesn't really provide much value - if a client has
-	an application specific identity, it can just convey it in
-	the dNSName type.]
+	[For discussion: Is the dNSName/SRVName distinction useful, 
+	or can we just simplify and use only dNSName? These two name
+	forms are analogous to the two recommended for use in X.509
+	certificates in the DANE client certificates draft, so the
+	server could use this to additionally check against the 
+	corresponding certificate fields (but does it need to?).
+	If the server needs a hint of whether to construct an
+	application specific ID, then this might be useful, but this
+	could also be inferred from the structure of the name and
+	the client could just specify an application specific identity 
+	in the dNSName type.]
       </t>
 
     </section>
-
 
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>
