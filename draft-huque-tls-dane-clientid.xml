@@ -6,11 +6,8 @@
 
 <!ENTITY RFC1035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1035.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
-<!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
-<!ENTITY RFC5280 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5280.xml">
 <!ENTITY RFC6066 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6066.xml">
-<!ENTITY RFC6125 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6125.xml">
 <!ENTITY RFC6347 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6347.xml">
 <!ENTITY RFC6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
 <!ENTITY RFC7250 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7250.xml">
@@ -67,7 +64,7 @@
 	</address>
 	</author>
 
-    <date day="30" month="December" year="2015" />
+    <date day="08" month="January" year="2016" />
 
     <!-- Meta-data Declarations -->
 
@@ -82,10 +79,10 @@
 
     <abstract>
       <t>
-	This document specifies a TLS extension to convey a DNS-Based
-	Authentication of Named Entities (DANE) Client Identity to a 
-	TLS server. This is useful for applications that perform TLS
-	client certificate verification via DANE TLSA records.
+	This document specifies a TLS and DTLS extension to convey a 
+	DNS-Based Authentication of Named Entities (DANE) Client Identity 
+	to a TLS or DTLS server. This is useful for applications that 
+	perform TLS client authentication via DANE TLSA records.
       </t>
     </abstract>
   </front>
@@ -100,12 +97,17 @@
 	Transport Layer Security (TLS) extension</xref> to convey a 
 	<xref target="RFC6698">DANE</xref>
 	Client Identity to the TLS server. This is useful for 
-	applications that perform TLS client certificate verification 
+	applications that perform TLS client authentication 
 	via DANE TLSA records, as described in 
-	<xref target="DANECLIENT">"DANE client certificates"</xref>.
+	<xref target="DANECLIENT"/>.
 	The conveyed identity is in the form of a domain name associated 
 	with the client that is expected to have a corresponding DANE TLSA 
 	record published in the DNS.
+      </t>
+      <t>
+	This extension supports both TLS and <xref target="RFC6347">DTLS
+	</xref>, and the term TLS in this document is used generically 
+	to describe both protocols.
       </t>
     </section>
 
@@ -118,33 +120,54 @@
 	extension defined in this document is used to accomplish this. 
 	Upon receipt of this extension, a TLS server learns the 
 	client's identity and the fact that the client expects that 
-	the server can authenticate it via a corresponding DNSSEC-
-	validated TLSA record. In the case of X.509 client certificates, 
-	a TLS server can learn the client's identity by examining subject
-	alternative names included in the certificate itself. However,
-	without a mechanism such as the one defined in this extension,
-	the TLS server cannot know apriori that the client has a 
-	published TLSA record, and thus may unnecessarily issue DNS 
-	queries for DANE TLSA records in-band with the TLS handshake 
-	even in cases where the client has no TLSA record associated 
-	with it. When <xref target="RFC7250">TLS raw public 
+	the server can authenticate it via a corresponding DNSSEC-validated 
+	TLSA record.
+      </t>
+      <t>
+	In the case of X.509 client certificates, a TLS server can 
+	learn the client's identity by examining subject alternative 
+	names included in the certificate itself. However, without a 
+	mechanism such as the one defined in this extension, the TLS 
+	server cannot know apriori that the client has a published 
+	TLSA record, and thus may unnecessarily issue DNS queries for 
+	DANE TLSA records in-band with the TLS handshake even in cases 
+	where the client has no TLSA record associated with it. When
+	multiple identities are present in the certificate, a client
+	can use this extension to specify exactly which one the server
+	should use. An additional situation in which this extension
+	helps is where some TLS servers may need to selectively prompt 
+	for client certificate credentials only for clients that are 
+	equipped to provide certificates.
+      </t>
+      <t>
+	When <xref target="RFC7250">TLS raw public 
 	keys</xref> are being used to authenticate the client, the
 	client uses this extension to explicitly indicate to the 
-	server what its domain name identity is. Detailed protocol
-	behavior of TLS clients and servers is described in the
-	<xref target="DANECLIENT">DANE client certificates
-	draft</xref>.
-
+	server what its domain name identity is.
+      </t>
+      <t>
+	Detailed protocol behavior of TLS clients and servers is 
+	described in <xref target="DANECLIENT"/>.
       </t>
     </section>
 
 
     <section title="DANE Client Identity Extension">
       <t>
-	The "extension_data" field of the DANE Client Identity
-	extension MUST contain a client name specified in the 
-	following format. [Question: should multiple client names
-	be supported?]
+	The DANE Client Identity Extension type, "dane_clientid",
+	will have a value assigned and registered in the IANA
+	TLS Extensions registry.
+      </t>
+      <t>
+	A TLS client implementing this specification SHOULD send
+	an extension of type "dane_clientid" in the ClientHello 
+	handshake message to TLS servers it intends to perform DANE
+	client authentication with.
+      </t>
+      <t>
+	The "extension_data" field of the extension MUST contain
+	a "DaneClientName" data structure defined in the following 
+	format:
       </t>
 
       <figure>
@@ -172,27 +195,46 @@ struct {
 	of the client in textual presentation format, as described in
 	<xref target="RFC1035">RFC 1035</xref>.
       </t>
+
+    </section>
+
+
+    <section anchor="Open" title="Open Questions">
       <t>
-	[For discussion: Is the dNSName/SRVName distinction useful, 
+	Should multiple client names be supported in the extension?
+      </t>
+      <t>
+	Is the dNSName/SRVName distinction useful, 
 	or can we just simplify and use only dNSName? These two name
 	forms are analogous to the two recommended for use in X.509
-	certificates in the DANE client certificates draft, so the
+	certificates in the DANE client authentication draft, so the
 	server could use this to additionally check against the 
 	corresponding certificate fields (but does it need to?).
 	If the server needs a hint of whether to construct an
 	application specific ID, then this might be useful, but this
 	could also be inferred from the structure of the name and
 	the client could just specify an application specific identity 
-	in the dNSName type.]
+	in the dNSName type.
       </t>
-
-    </section>
-
-    <section anchor="Acknowledgements" title="Acknowledgements">
       <t>
-	[TBD]
+	The extension is defined in terms of a DANE specific
+	identity. Is there a need for a more general purpose
+	client name indication extension? If so, this extension
+	could be renamed and augmented to have an additional 
+	usage field containing values denoting DANE or alternative
+	application usages.
       </t>
     </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>
+	To prevent unnecessary privacy leakage of the client's name
+	in cleartext, a TLS client implementing this specification
+	should be configured to only send this extension to TLS 
+	servers it intends to perform client authentication with.
+      </t>
+    </section>
+
 
     <section anchor="IANA" title="IANA Considerations">
       <t>
@@ -203,30 +245,24 @@ struct {
       </t>
     </section>
 
-    <section anchor="Security" title="Security Considerations">
-      <t>
-	[Add security considerations text here.]
-      </t>
-    </section>
+
   </middle>
+
 
   <!--  *****BACK MATTER ***** -->
 
   <back>
     <references title="Normative References">
       &RFC1035;
-      &RFC4035;
       &RFC5246;
-      &RFC5280;
       &RFC6066;
-      &RFC6125;
       &RFC6347;
       &RFC6698;
       &RFC7250;
       <reference anchor="DANECLIENT"
 		 target="https://tools.ietf.org/html/draft-huque-dane-client-cert">
 	<front>
-          <title>Client Certificates in DANE TLSA Records</title>
+          <title>TLS Client Authentication via DANE TLSA Records</title>
           <author fullname="Shumon Huque" initials="S" surname="Huque" />
           <author fullname="Dan James" initials="D" surname="James" />
           <author fullname="Viktor Dukhovni" initials="V" surname="Dukhovni" />
