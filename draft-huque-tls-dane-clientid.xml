@@ -112,7 +112,7 @@
     </section>
 
 
-    <section title="Authentication Model">
+    <section anchor="Overview" title="Overview">
       <t>
 	When TLS clients use X.509 client certificates or raw public
 	keys that are authenticated via DANE TLSA records, they need a 
