@@ -64,7 +64,7 @@
 	</address>
 	</author>
 
-    <date day="16" month="February" year="2017" />
+    <date day="19" month="February" year="2017" />
 
     <!-- Meta-data Declarations -->
 
@@ -264,7 +264,6 @@ struct {
 	<front>
           <title>TLS Client Authentication via DANE TLSA Records</title>
           <author fullname="Shumon Huque" initials="S" surname="Huque" />
-          <author fullname="Dan James" initials="D" surname="James" />
           <author fullname="Viktor Dukhovni" initials="V" surname="Dukhovni" />
 	</front>
       </reference>
