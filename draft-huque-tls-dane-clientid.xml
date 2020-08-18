@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!-- One method to get references from the online citation libraries.
-     There has to be one entity for each item to be referenced. 
+     There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC1035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1035.xml">
@@ -11,12 +11,13 @@
 <!ENTITY RFC6347 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6347.xml">
 <!ENTITY RFC6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
 <!ENTITY RFC7250 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7250.xml">
+<!ENTITY RFC8446 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
-<!-- For a complete list and description of processing instructions (PIs), 
+<!-- For a complete list and description of processing instructions (PIs),
      please see http://xml.resource.org/authoring/README.html. -->
 <!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
      (Here they are set differently than their defaults in xml2rfc v1.32) -->
@@ -32,17 +33,17 @@
 <!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
 <?rfc sortrefs="yes" ?>
 <!-- sort the reference entries alphabetically -->
-<!-- control vertical white space 
+<!-- control vertical white space
      (using these PIs as follows is recommended by the RFC Editor) -->
 <?rfc compact="yes" ?>
 <!-- do not start each main section on a new page -->
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-huque-tls-dane-clientid-01" ipr="trust200902">
+<rfc category="std" docName="draft-huque-tls-dane-clientid-02" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
-     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
      they will automatically be output with "(if approved)" -->
 
   <!-- ***** FRONT MATTER ***** -->
@@ -64,7 +65,7 @@
 	</address>
 	</author>
 
-    <date day="19" month="February" year="2017" />
+    <date day="18" month="August" year="2020" />
 
     <!-- Meta-data Declarations -->
 
@@ -79,9 +80,9 @@
 
     <abstract>
       <t>
-	This document specifies a TLS and DTLS extension to convey a 
-	DNS-Based Authentication of Named Entities (DANE) Client Identity 
-	to a TLS or DTLS server. This is useful for applications that 
+	This document specifies a TLS and DTLS extension to convey a
+	DNS-Based Authentication of Named Entities (DANE) Client Identity
+	to a TLS or DTLS server. This is useful for applications that
 	perform TLS client authentication via DANE TLSA records.
       </t>
     </abstract>
@@ -94,19 +95,22 @@
     <section title="Introduction">
       <t>
 	This document specifies a <xref target="RFC6066">
-	Transport Layer Security (TLS) extension</xref> to convey a 
+	Transport Layer Security (TLS) extension</xref> to convey a
 	<xref target="RFC6698">DANE</xref>
-	Client Identity to the TLS server. This is useful for 
-	applications that perform TLS client authentication 
-	via DANE TLSA records, as described in 
-	<xref target="DANECLIENT"/>.
-	The conveyed identity is in the form of a domain name associated 
-	with the client that is expected to have a corresponding DANE TLSA 
-	record published in the DNS.
+	Client Identity to the TLS server. This is useful for
+	applications that perform TLS client authentication
+	via DANE TLSA records, as described in
+	<xref target="DANECLIENT"/>. The extension could be empty to
+        indicate to the server that the client has a DANE record and that
+        the server can perform DANE authentication of the client with the
+        identity extracted from the client certificate. Or the extension
+        can contain the full client identity, in the form of the DNS domain
+        name that is expected to have a DANE TLSA record published for.
       </t>
       <t>
-	This extension supports both TLS and <xref target="RFC6347">DTLS
-	</xref>, and the term TLS in this document is used generically 
+	This extension supports both TLS <xref target="RFC5246"/>
+        <xref target="RFC8446"/> and <xref target="RFC6347">DTLS
+	</xref>, and the term TLS in this document is used generically
 	to describe both protocols.
       </t>
     </section>
@@ -115,38 +119,36 @@
     <section anchor="Overview" title="Overview">
       <t>
 	When TLS clients use X.509 client certificates or raw public
-	keys that are authenticated via DANE TLSA records, they need a 
-	mechanism to convey their DANE identity to the server. The TLS 
-	extension defined in this document is used to accomplish this. 
-	Upon receipt of this extension, a TLS server learns the 
-	client's identity and the fact that the client expects that 
-	the server can authenticate it via a corresponding DNSSEC-validated 
-	TLSA record.
+	keys that are authenticated via DANE TLSA records, it is useful
+        for them to convey their intent to be authenticated via DANE, or
+        even to convey their complete DANE identity to the server. The TLS
+	extension defined in this document is used to accomplish this.
       </t>
       <t>
-	In the case of X.509 client certificates, a TLS server can 
-	learn the client's identity by examining subject alternative 
-	names included in the certificate itself. However, without a 
-	mechanism such as the one defined in this extension, the TLS 
-	server cannot know apriori that the client has a published 
-	TLSA record, and thus may unnecessarily issue DNS queries for 
-	DANE TLSA records in-band with the TLS handshake even in cases 
+	In the case of X.509 client certificates, a TLS server can
+	learn the client's identity by examining subject alternative
+	names included in the certificate itself. However, without a
+	mechanism such as the one defined in this extension, the TLS
+	server cannot know apriori that the client has a published
+	TLSA record, and thus may unnecessarily issue DNS queries for
+	DANE TLSA records in-band with the TLS handshake even in cases
 	where the client has no TLSA record associated with it. When
 	multiple identities are present in the certificate, a client
 	can use this extension to specify exactly which one the server
 	should use. An additional situation in which this extension
-	helps is where some TLS servers may need to selectively prompt 
-	for client certificate credentials only for clients that are 
+	helps is where some TLS servers may need to selectively prompt
+	for client certificate credentials only for clients that are
 	equipped to provide certificates.
       </t>
       <t>
-	When <xref target="RFC7250">TLS raw public 
+	When <xref target="RFC7250">TLS raw public
 	keys</xref> are being used to authenticate the client, the
-	client uses this extension to explicitly indicate to the 
-	server what its domain name identity is.
+	client uses this extension to explicitly indicate to the
+	server what its domain name identity is (since there is no
+        X.509 certificate from which this identity can be extracted).
       </t>
       <t>
-	Detailed protocol behavior of TLS clients and servers is 
+	Detailed protocol behavior of TLS clients and servers is
 	described in <xref target="DANECLIENT"/>.
       </t>
     </section>
@@ -160,14 +162,20 @@
       </t>
       <t>
 	A TLS client implementing this specification SHOULD send
-	an extension of type "dane_clientid" in the ClientHello 
+	an extension of type "dane_clientid" in the ClientHello
 	handshake message to TLS servers it intends to perform DANE
 	client authentication with.
       </t>
+      <t>If the client only needs to indicate that it has a DANE
+         record and that the client's domain name identity can be
+         obtained from its certificate, then the extension sent can
+         be empty.
+      </t>
       <t>
-	The "extension_data" field of the extension MUST contain
-	a "DaneClientName" data structure defined in the following 
-	format:
+        If the client additionally needs to send its domain name
+        identity, then the "extension_data" field of the extension
+        MUST contain a "DaneClientName" data structure defined in the
+        following format:
       </t>
 
       <figure>
@@ -204,23 +212,23 @@ struct {
 	Should multiple client names be supported in the extension?
       </t>
       <t>
-	Is the dNSName/SRVName distinction useful, 
+	Is the dNSName/SRVName distinction useful,
 	or can we just simplify and use only dNSName? These two name
 	forms are analogous to the two recommended for use in X.509
 	certificates in the DANE client authentication draft, so the
-	server could use this to additionally check against the 
+	server could use this to additionally check against the
 	corresponding certificate fields (but does it need to?).
 	If the server needs a hint of whether to construct an
 	application specific ID, then this might be useful, but this
 	could also be inferred from the structure of the name and
-	the client could just specify an application specific identity 
+	the client could just specify an application specific identity
 	in the dNSName type.
       </t>
       <t>
 	The extension is defined in terms of a DANE specific
 	identity. Is there a need for a more general purpose
 	client name indication extension? If so, this extension
-	could be renamed and augmented to have an additional 
+	could be renamed and augmented to have an additional
 	usage field containing values denoting DANE or alternative
 	application usages.
       </t>
@@ -228,19 +236,29 @@ struct {
 
     <section anchor="Security" title="Security Considerations">
       <t>
+        This extension is sent in the first flight of the TLS
+        client's network data (Client Hello), which is in clear
+        text.
+      </t>
+      <t>
 	To prevent unnecessary privacy leakage of the client's name
 	in cleartext, a TLS client implementing this specification
-	should be configured to only send this extension to TLS 
+	should be configured to only send this extension to TLS
 	servers it intends to perform client authentication with.
+      </t>
+      <t>
+        Ideally, this extension should be used with the proposed
+        TLS Encrypted Client Hello extension <xref target="ECH"/>,
+        which encrypts the entire Client Hello message.
       </t>
     </section>
 
 
     <section anchor="IANA" title="IANA Considerations">
       <t>
-	This extension requires the registration of a new value in the 
-	TLS ExtensionsType registry. If the draft is adopted by the WG, 
-	the authors expect to make an early allocation request as specified 
+	This extension requires the registration of a new value in the
+	TLS ExtensionsType registry. If the draft is adopted by the WG,
+	the authors expect to make an early allocation request as specified
 	in [RFC7120]
       </t>
     </section>
@@ -255,6 +273,7 @@ struct {
     <references title="Normative References">
       &RFC1035;
       &RFC5246;
+      &RFC8446;
       &RFC6066;
       &RFC6347;
       &RFC6698;
@@ -267,10 +286,16 @@ struct {
           <author fullname="Viktor Dukhovni" initials="V" surname="Dukhovni" />
 	</front>
       </reference>
-    </references>
-
-    <references title="Informative References">
-      &RFC3552;
+      <reference anchor="ECH"
+		 target="https://tools.ietf.org/html/draft-ietf-tls-esni">
+	<front>
+          <title>TLS Encrypted Client Hello</title>
+          <author fullname="Eric Rescorla" initials="E" surname="Rescorla" />
+          <author fullname="Kazuho Oku" initials="K" surname="Oku" />
+          <author fullname="Nick Sullivan" initials="N" surname="Sullivan" />
+          <author fullname="Christopher A Wood" initials="C.A." surname="Wood" />
+	</front>
+      </reference>
     </references>
   </back>
 
