@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-tls-dane-clientid-02"
+        docName="draft-huque-tls-dane-clientid-03"
         ipr="trust200902" obsoletes="" updates=""
         submissionType="IETF" xml:lang="en"
         tocInclude="true" tocDepth="4"
@@ -55,8 +55,15 @@
         <email>ietf-dane@dukhovni.org</email>
       </address>
     </author>
+    <author fullname="Ash Wilson" initials="A." surname="Wilson">
+      <organization>Valimail</organization>
+      <address>
+        <email>ash.wilson@valimail.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
 
-    <date day="8" month="October" year="2020"/>
+    <date day="30" month="October" year="2020"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
