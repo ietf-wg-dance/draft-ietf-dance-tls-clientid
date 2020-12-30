@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-tls-dane-clientid-03"
+        docName="draft-huque-tls-dane-clientid-04"
         ipr="trust200902" obsoletes="" updates=""
         submissionType="IETF" xml:lang="en"
         tocInclude="true" tocDepth="4"
@@ -41,7 +41,7 @@
   <front>
 
     <title abbrev="TLS DANE ClientID Extension">TLS Extension for DANE Client Identity</title>
-    <seriesInfo name="Internet-Draft" value="draft-huque-tls-dane-clientid-02"/>
+    <seriesInfo name="Internet-Draft" value="draft-huque-tls-dane-clientid-04"/>
 
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
@@ -63,7 +63,7 @@
       </address>
     </author>
 
-    <date day="30" month="October" year="2020"/>
+    <date day="30" month="December" year="2020"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
@@ -131,7 +131,7 @@
 	DANE TLSA records in-band with the TLS handshake even in cases
 	where the client has no TLSA record associated with it. When
 	multiple identities are present in the certificate, a client
-	can use this extension to specify exactly which one the server
+	must use this extension to specify exactly which one the server
 	should use. An additional situation in which this extension
 	helps is where some TLS servers may need to selectively prompt
 	for client certificate credentials only for clients that are
@@ -155,81 +155,55 @@
       <t>
 	The DANE Client Identity Extension type, "dane_clientid",
 	will have a value assigned and registered in the IANA
-	TLS Extensions registry. Its format is similar to the TLS
-        Server Name Indication extension.
-      </t>
-      <t>
-	A TLS client implementing this specification SHOULD send
-	an extension of type "dane_clientid" in the ClientHello
-	handshake message to TLS servers it intends to perform DANE
-	client authentication with.
-      </t>
-      <t>If the client only needs to indicate that it has a DANE
-         record and that the client's domain name identity can be
-         obtained from its certificate, then the extension sent can
-         be empty.
-      </t>
-      <t>
-        If the client additionally needs to send its domain name
-        identity, then the "extension_data" field of the extension
-        MUST contain a "ClientNameList" data structure defined in the
-        following format:
+	TLS Extensions registry. Its extension data (if not
+        empty) has the following format:
       </t>
       <artwork name="" type="" align="left" alt=""><![CDATA[
 
-struct {
-    NameType name_type;
-    select (name_type) {
-        case host_name: HostName;
-    } name;
-} ClientName;
-
-enum {
-    host_name(0), (255)
-} NameType;
-
-opaque HostName<1..2^16-1>;
-
-struct {
-    ClientName client_name_list<1..2^16-1>
-} ClientNameList;
-
+opaque ClientName<1..2^8-1>;
         ]]></artwork>
       <t>
-	The opaque HostName field contains the domain name
-	of the client in textual presentation format, as described in
-	<xref target="RFC1035" format="default">RFC 1035</xref>. The
-        ClientNameList MUST NOT contain more than one name of the same
-        name_type. Currently only one "host_name" type is defined.
+	The ClientName field contains the single domain name of
+	the client in textual presentation format, as described in
+	<xref target="RFC1035" format="default">RFC 1035</xref>,
+        omitting the trailing dot.
       </t>
       <t>
 	A TLS server implementing this specification MAY send
-	back an empty extension of type "dane_clientid" in its SeverHello
-	handshake message to indicate that it understands the extension
-        and intends to perform DANE client authentication. (Is there a
-        compelling reason to do this?)
+	an empty extension of type "dane_clientid" to indicate that
+        it understands the extension and is capable of performing
+        DANE client authentication. In TLS 1.2, the empty extension
+        is sent in the ServerHello message. In TLS 1.3, it is sent
+        in the CertificateRequest message.
+      </t>
+      <t>
+	A TLS client implementing this specification SHOULD send
+	an extension of type "dane_clientid". If the client only needs
+        to indicate that it has a DANE record and that the client's
+        domain name identity can be obtained from its certificate, then
+        the extension sent can be empty. If the client needs to send
+        its domain name identity, then the "extension_data" field
+        of the extension MUST contain a "ClientName" data structure
+        populated with the domain name.
+      </t>
+      <t>
+        In TLS 1.2, the client extension is sent in the ClientHello message.
+        In TLS 1.3, it is sent in the Certificate message.
       </t>
     </section>
 
     <section anchor="Security" numbered="true" toc="default">
       <name>Security Considerations</name>
       <t>
-        This extension is sent in the first flight of the TLS
-        client's network data (Client Hello), which is in clear
-        text.
+        In TLS 1.3, this extension is sent in the CertificateRequest
+        and Certificate messages, which are encrypted.
       </t>
       <t>
-	To prevent unnecessary privacy leakage of the client's name
-	in cleartext, a TLS client implementing this specification
-	should be configured to only send this extension to TLS
-	servers it intends to perform client authentication with.
-      </t>
-      <t>
-        Ideally, this extension should be used with the proposed
-        TLS Encrypted Client Hello extension <xref target="ECH" format="default"/>,
-        which encrypts the entire Client Hello message. This will
-        prevent leakage of the hostname, if included in the extension,
-        in clear text.
+        In TLS 1.2, this extension cannot be encrypted. When used
+        with TLS 1.2, to prevent unnecessary privacy leakage of the
+        client's name in cleartext, a TLS client implementing this
+        specification should be configured to only send this extension
+        to TLS servers it intends to perform client authentication with.
       </t>
     </section>
 
@@ -259,15 +233,7 @@ struct {
           <title>TLS Client Authentication via DANE TLSA Records</title>
           <author fullname="Shumon Huque" initials="S" surname="Huque"/>
           <author fullname="Viktor Dukhovni" initials="V" surname="Dukhovni"/>
-        </front>
-      </reference>
-      <reference anchor="ECH" target="https://tools.ietf.org/html/draft-ietf-tls-esni">
-        <front>
-          <title>TLS Encrypted Client Hello</title>
-          <author fullname="Eric Rescorla" initials="E" surname="Rescorla"/>
-          <author fullname="Kazuho Oku" initials="K" surname="Oku"/>
-          <author fullname="Nick Sullivan" initials="N" surname="Sullivan"/>
-          <author fullname="Christopher A Wood" initials="C.A." surname="Wood"/>
+          <author fullname="Ash Wilson" initials="A" surname="Wilson"/>
         </front>
       </reference>
     </references>
