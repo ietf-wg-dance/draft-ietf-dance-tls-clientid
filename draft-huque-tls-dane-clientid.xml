@@ -25,7 +25,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-huque-tls-dane-clientid-05" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-huque-tls-dane-clientid-06" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
@@ -50,7 +50,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="5" month="7" year="2021"/>
+    <date day="14" month="2" year="2022"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
@@ -150,7 +150,7 @@ opaque ClientName<1..2^8-1>;
         omitting the trailing dot.
       </t>
       <t>
-	A TLS server implementing this specification MAY send
+	A TLS server implementing this specification MUST send
 	an empty extension of type "dane_clientid" to indicate that
         it understands the extension and is capable of performing
         DANE client authentication. In TLS 1.2, the empty extension
@@ -169,7 +169,10 @@ opaque ClientName<1..2^8-1>;
       </t>
       <t>
         In TLS 1.2, the client extension is sent in the ClientHello message.
-        In TLS 1.3, it is sent in the Certificate message.
+        In TLS 1.3, it is sent in the Certificate message. Additionally, in
+        TLS 1.3, the client is only permitted to send the extension if it
+        sees the corresponding empty extension in the server's
+        CertificateRequest message.
       </t>
     </section>
     <section anchor="Security" numbered="true" toc="default">
