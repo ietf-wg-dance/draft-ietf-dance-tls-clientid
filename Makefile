@@ -1,4 +1,4 @@
-SOURCE  = draft-huque-tls-dane-clientid
+SOURCE  = draft-ietf-dance-tls-clientid
 
 all:	$(SOURCE).txt $(SOURCE).html
 

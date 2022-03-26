@@ -25,12 +25,12 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-huque-tls-dane-clientid-06" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-00" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
     <title abbrev="TLS DANE ClientID Extension">TLS Extension for DANE Client Identity</title>
-    <seriesInfo name="Internet-Draft" value="draft-huque-tls-dane-clientid-04"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-00"/>
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
       <address>
@@ -50,7 +50,7 @@
         <!-- uri and facsimile elements may also be added -->
       </address>
     </author>
-    <date day="14" month="2" year="2022"/>
+    <date day="24" month="3" year="2022"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
