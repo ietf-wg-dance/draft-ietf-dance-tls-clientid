@@ -5,12 +5,12 @@
 Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
 Intended status: Standards Track                             V. Dukhovni
-Expires: 13 November 2023                                      Two Sigma
-                                                             12 May 2023
+Expires: 21 December 2023                                      Two Sigma
+                                                            19 June 2023
 
 
                  TLS Extension for DANE Client Identity
-                    draft-ietf-dance-tls-clientid-02
+                    draft-ietf-dance-tls-clientid-03
 
 Abstract
 
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 November 2023.
+   This Internet-Draft will expire on 21 December 2023.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Huque & Dukhovni        Expires 13 November 2023                [Page 1]
+Huque & Dukhovni        Expires 21 December 2023                [Page 1]
 
-Internet-Draft         TLS DANE ClientID Extension              May 2023
+Internet-Draft         TLS DANE ClientID Extension             June 2023
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Huque & Dukhovni        Expires 13 November 2023                [Page 2]
+Huque & Dukhovni        Expires 21 December 2023                [Page 2]
 
-Internet-Draft         TLS DANE ClientID Extension              May 2023
+Internet-Draft         TLS DANE ClientID Extension             June 2023
 
 
    When TLS raw public keys [RFC7250] are being used to authenticate the
@@ -165,9 +165,9 @@ Internet-Draft         TLS DANE ClientID Extension              May 2023
 
 
 
-Huque & Dukhovni        Expires 13 November 2023                [Page 3]
+Huque & Dukhovni        Expires 21 December 2023                [Page 3]
 
-Internet-Draft         TLS DANE ClientID Extension              May 2023
+Internet-Draft         TLS DANE ClientID Extension             June 2023
 
 
    In TLS 1.2, this extension cannot be encrypted.  When used with TLS
@@ -221,9 +221,9 @@ Internet-Draft         TLS DANE ClientID Extension              May 2023
 
 
 
-Huque & Dukhovni        Expires 13 November 2023                [Page 4]
+Huque & Dukhovni        Expires 21 December 2023                [Page 4]
 
-Internet-Draft         TLS DANE ClientID Extension              May 2023
+Internet-Draft         TLS DANE ClientID Extension             June 2023
 
 
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
@@ -277,4 +277,4 @@ Authors' Addresses
 
 
 
-Huque & Dukhovni        Expires 13 November 2023                [Page 5]
+Huque & Dukhovni        Expires 21 December 2023                [Page 5]
