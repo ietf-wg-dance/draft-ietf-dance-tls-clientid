@@ -85,7 +85,9 @@
 	This extension supports both TLS <xref target="RFC5246" format="default"/>
         <xref target="RFC8446" format="default"/> and <xref target="RFC6347" format="default">DTLS
         </xref>, and the term TLS in this document is used generically
-	to describe both protocols.
+	to describe both protocols. It is presently defined to work for
+        both TLS 1.2 and 1.3 versions, and is expected to work with newer
+        versions going forward.
       </t>
     </section>
     <section anchor="Overview" numbered="true" toc="default">
