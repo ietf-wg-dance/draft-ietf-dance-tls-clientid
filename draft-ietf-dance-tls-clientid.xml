@@ -109,7 +109,7 @@
 	DANE TLSA records in-band with the TLS handshake even in cases
 	where the client has no TLSA record associated with it. When
 	multiple identities are present in the certificate, a client
-	must use this extension to specify exactly which one the server
+	MUST use this extension to specify exactly which one the server
 	should use. An additional situation in which this extension
 	helps is where some TLS servers may need to selectively prompt
 	for client certificate credentials only for clients that are
@@ -118,7 +118,7 @@
       <t>
 	When <xref target="RFC7250" format="default">TLS raw public
 	keys</xref> are being used to authenticate the client, the
-	client uses this extension to explicitly indicate to the
+	client MUST use this extension to explicitly indicate to the
 	server what its domain name identity is (since there is no
         X.509 certificate from which the identity can be extracted).
       </t>
@@ -170,7 +170,8 @@ opaque ClientName<1..2^8-1>;
         in the CertificateRequest message.
       </t>
       <t>
-	A TLS client implementing this specification SHOULD send
+	A TLS client implementing this specification and intending to
+        use DANE client authentication the TLS server, MUST send
 	an extension of type "dane_clientid". If the client only needs
         to indicate that it has a DANE record and that the client's
         domain name identity can be obtained from its certificate, then
