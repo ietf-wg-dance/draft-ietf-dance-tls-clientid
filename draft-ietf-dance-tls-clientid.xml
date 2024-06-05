@@ -205,8 +205,13 @@ opaque ClientName<1..2^8-1>;
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
       <t>
-	This extension requires the registration of a new value in the
-	TLS ExtensionsType registry.
+	IANA is requested to assign a new value from the TLS ExtensionsType
+	registry:
+	*  The Extension Name should be dane_clientid
+        *  The TLS 1.3 value should be CT
+        *  The DTLS-Only value should be N
+        *  The Recommended value should be ?
+        *  The Reference should be this document
       </t>
     </section>
   </middle>
