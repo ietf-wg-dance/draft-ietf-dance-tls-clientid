@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE rfc SYSTEM "rfc2629-xhtml.ent">
+
+<!DOCTYPE rfc>
+
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs),
@@ -25,12 +27,12 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-05" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-06" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
     <title abbrev="TLS DANE ClientID Extension">TLS Extension for DANE Client Identity</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-05"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-06"/>
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
       <address>
@@ -38,13 +40,13 @@
       </address>
     </author>
     <author fullname="Viktor Dukhovni" initials="V." surname="Dukhovni">
-      <organization>Two Sigma</organization>
+      <organization>OpenSSL Corporation</organization>
       <address>
         <email>ietf-dane@dukhovni.org</email>
       </address>
     </author>
 
-    <date day="04" month="05" year="2025"/>
+    <date day="09" month="06" year="2025"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
@@ -89,7 +91,15 @@
         both TLS 1.2 and 1.3 versions, and is expected to work with newer
         versions going forward.
       </t>
+      <section anchor="reserved-words"><name>Requirements Language</name>
+      <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+   &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;,
+   and &quot;OPTIONAL&quot; in this document are to be interpreted as described
+   in BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when, and only when, they
+   appear in all capitals, as shown here.</t>
     </section>
+    </section>
+
     <section anchor="Overview" numbered="true" toc="default">
       <name>Overview</name>
       <t>
@@ -206,7 +216,8 @@ opaque ClientName<1..2^8-1>;
       <name>IANA Considerations</name>
       <t>
 	This extension requires the registration of a new value in the
-	TLS ExtensionsType registry.
+	"TLS ExtensionsType Values" registry, with value TBD and
+        extension name "dane_clientid".
       </t>
     </section>
   </middle>
@@ -215,127 +226,15 @@ opaque ClientName<1..2^8-1>;
   <back>
     <references>
       <name>Normative References</name>
-      <reference anchor="RFC1035" target="https://www.rfc-editor.org/info/rfc1035" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
-        <front>
-          <title>Domain names - implementation and specification</title>
-          <author initials="P.V." surname="Mockapetris" fullname="P.V. Mockapetris">
-            <organization/>
-          </author>
-          <date year="1987" month="November"/>
-          <abstract>
-            <t>This RFC is the revised specification of the protocol and format used in the implementation of the Domain Name System.  It obsoletes RFC-883. This memo documents the details of the domain name client - server communication.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="STD" value="13"/>
-        <seriesInfo name="RFC" value="1035"/>
-        <seriesInfo name="DOI" value="10.17487/RFC1035"/>
-      </reference>
-      <reference anchor="RFC5246" target="https://www.rfc-editor.org/info/rfc5246" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
-        <front>
-          <title>The Transport Layer Security (TLS) Protocol Version 1.2</title>
-          <author initials="T." surname="Dierks" fullname="T. Dierks">
-            <organization/>
-          </author>
-          <author initials="E." surname="Rescorla" fullname="E. Rescorla">
-            <organization/>
-          </author>
-          <date year="2008" month="August"/>
-          <abstract>
-            <t>This document specifies Version 1.2 of the Transport Layer Security (TLS) protocol.  The TLS protocol provides communications security over the Internet.  The protocol allows client/server applications to communicate in a way that is designed to prevent eavesdropping, tampering, or message forgery.  [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="5246"/>
-        <seriesInfo name="DOI" value="10.17487/RFC5246"/>
-      </reference>
-      <reference anchor="RFC8446" target="https://www.rfc-editor.org/info/rfc8446" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml">
-        <front>
-          <title>The Transport Layer Security (TLS) Protocol Version 1.3</title>
-          <author initials="E." surname="Rescorla" fullname="E. Rescorla">
-            <organization/>
-          </author>
-          <date year="2018" month="August"/>
-          <abstract>
-            <t>This document specifies version 1.3 of the Transport Layer Security (TLS) protocol.  TLS allows client/server applications to communicate over the Internet in a way that is designed to prevent eavesdropping, tampering, and message forgery.</t>
-            <t>This document updates RFCs 5705 and 6066, and obsoletes RFCs 5077, 5246, and 6961.  This document also specifies new requirements for TLS 1.2 implementations.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="8446"/>
-        <seriesInfo name="DOI" value="10.17487/RFC8446"/>
-      </reference>
-      <reference anchor="RFC6066" target="https://www.rfc-editor.org/info/rfc6066" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6066.xml">
-        <front>
-          <title>Transport Layer Security (TLS) Extensions: Extension Definitions</title>
-          <author initials="D." surname="Eastlake 3rd" fullname="D. Eastlake 3rd">
-            <organization/>
-          </author>
-          <date year="2011" month="January"/>
-          <abstract>
-            <t>This document provides specifications for existing TLS extensions.  It is a companion document for RFC 5246, "The Transport Layer Security (TLS) Protocol Version 1.2".  The extensions specified are server_name, max_fragment_length, client_certificate_url, trusted_ca_keys, truncated_hmac, and status_request.  [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="6066"/>
-        <seriesInfo name="DOI" value="10.17487/RFC6066"/>
-      </reference>
-      <reference anchor="RFC6347" target="https://www.rfc-editor.org/info/rfc6347" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6347.xml">
-        <front>
-          <title>Datagram Transport Layer Security Version 1.2</title>
-          <author initials="E." surname="Rescorla" fullname="E. Rescorla">
-            <organization/>
-          </author>
-          <author initials="N." surname="Modadugu" fullname="N. Modadugu">
-            <organization/>
-          </author>
-          <date year="2012" month="January"/>
-          <abstract>
-            <t>This document specifies version 1.2 of the Datagram Transport Layer Security (DTLS) protocol.  The DTLS protocol provides communications privacy for datagram protocols.  The protocol allows client/server applications to communicate in a way that is designed to prevent eavesdropping, tampering, or message forgery.  The DTLS protocol is based on the Transport Layer Security (TLS) protocol and provides equivalent security guarantees.  Datagram semantics of the underlying transport are preserved by the DTLS protocol.  This document updates DTLS 1.0 to work with TLS version 1.2.  [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="6347"/>
-        <seriesInfo name="DOI" value="10.17487/RFC6347"/>
-      </reference>
-      <reference anchor="RFC6698" target="https://www.rfc-editor.org/info/rfc6698" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
-        <front>
-          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
-          <author initials="P." surname="Hoffman" fullname="P. Hoffman">
-            <organization/>
-          </author>
-          <author initials="J." surname="Schlyter" fullname="J. Schlyter">
-            <organization/>
-          </author>
-          <date year="2012" month="August"/>
-          <abstract>
-            <t>Encrypted communication on the Internet often uses Transport Layer Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software.  [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="6698"/>
-        <seriesInfo name="DOI" value="10.17487/RFC6698"/>
-      </reference>
-      <reference anchor="RFC7250" target="https://www.rfc-editor.org/info/rfc7250" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7250.xml">
-        <front>
-          <title>Using Raw Public Keys in Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</title>
-          <author initials="P." surname="Wouters" fullname="P. Wouters" role="editor">
-            <organization/>
-          </author>
-          <author initials="H." surname="Tschofenig" fullname="H. Tschofenig" role="editor">
-            <organization/>
-          </author>
-          <author initials="J." surname="Gilmore" fullname="J. Gilmore">
-            <organization/>
-          </author>
-          <author initials="S." surname="Weiler" fullname="S. Weiler">
-            <organization/>
-          </author>
-          <author initials="T." surname="Kivinen" fullname="T. Kivinen">
-            <organization/>
-          </author>
-          <date year="2014" month="June"/>
-          <abstract>
-            <t>This document specifies a new certificate type and two TLS extensions for exchanging raw public keys in Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS).  The new certificate type allows raw public keys to be used for authentication.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="7250"/>
-        <seriesInfo name="DOI" value="10.17487/RFC7250"/>
-      </reference>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6066.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6347.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7250.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
       <reference anchor="DANECLIENT" target="https://tools.ietf.org/html/draft-huque-dane-client-cert">
         <front>
           <title>TLS Client Authentication via DANE TLSA Records</title>
