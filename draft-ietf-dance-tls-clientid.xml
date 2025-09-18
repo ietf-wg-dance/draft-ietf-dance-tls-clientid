@@ -215,9 +215,14 @@ opaque ClientName<1..2^8-1>;
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
       <t>
-	This extension requires the registration of a new value in the
-	"TLS ExtensionsType Values" registry, with value TBD and
-        extension name "dane_clientid".
+        IANA is requested to create the following entry in the "TLS ExtensionTypes Values" registry:
+      </t>
+      <t>
+        Extension Name "dane_clientid" with value TBD, "TLS 1.3" column values set to "CR, CT", "DTLS-Only" column set to "N", and "Recommended" column set to "N".
+      </t>
+      <t>
+        The 'N' designation in the "Recommended" column is because this
+        extension has very specific use cases.
       </t>
     </section>
   </middle>
