@@ -27,12 +27,12 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-06" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-07" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
     <title abbrev="TLS DANE ClientID Extension">TLS Extension for DANE Client Identity</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-06"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-07"/>
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
       <address>
@@ -46,7 +46,7 @@
       </address>
     </author>
 
-    <date day="13" month="06" year="2025"/>
+    <date day="17" month="09" year="2025"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
@@ -114,7 +114,7 @@
 	learn the client's identity by examining subject alternative
 	names included in the certificate itself. However, without a
 	mechanism such as the one defined in this extension, the TLS
-	server cannot know apriori that the client has a published
+	server cannot know before hand that the client has a published
 	TLSA record, and thus may unnecessarily issue DNS queries for
 	DANE TLSA records in-band with the TLS handshake even in cases
 	where the client has no TLSA record associated with it. When
@@ -215,9 +215,14 @@ opaque ClientName<1..2^8-1>;
     <section anchor="IANA" numbered="true" toc="default">
       <name>IANA Considerations</name>
       <t>
-	This extension requires the registration of a new value in the
-	"TLS ExtensionsType Values" registry, with value TBD and
-        extension name "dane_clientid".
+        IANA is requested to create the following entry in the "TLS ExtensionTypes Values" registry:
+      </t>
+      <t>
+        Extension Name "dane_clientid" with value TBD, "TLS 1.3" column values set to "CR, CT", "DTLS-Only" column set to "N", and "Recommended" column set to "N".
+      </t>
+      <t>
+        The 'N' designation in the "Recommended" column is because this
+        extension has very specific use cases.
       </t>
     </section>
   </middle>
