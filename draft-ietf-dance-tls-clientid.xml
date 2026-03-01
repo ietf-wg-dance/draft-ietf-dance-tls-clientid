@@ -27,12 +27,12 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-07" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" consensus="true" docName="draft-ietf-dance-tls-clientid-08" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
     <title abbrev="TLS DANE ClientID Extension">TLS Extension for DANE Client Identity</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-07"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-dance-tls-clientid-08"/>
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
       <address>
@@ -46,7 +46,7 @@
       </address>
     </author>
 
-    <date day="17" month="09" year="2025"/>
+    <date day="1" month="03" year="2026"/>
     <!-- Meta-data Declarations -->
 
     <area>General</area>
@@ -84,12 +84,12 @@
         name that is expected to have a DANE TLSA record published for it.
       </t>
       <t>
-	This extension supports both TLS <xref target="RFC5246" format="default"/>
-        <xref target="RFC8446" format="default"/> and <xref target="RFC6347" format="default">DTLS
-        </xref>, and the term TLS in this document is used generically
+	This extension supports both
+        <xref target="RFC8446" format="default">TLS</xref> and
+        <xref target="RFC9147" format="default">DTLS</xref>, and the term TLS in this document is used generically
 	to describe both protocols. It is presently defined to work for
-        both TLS 1.2 and 1.3 versions, and is expected to work with newer
-        versions going forward.
+        TLS version 1.3, and is expected to work with newer versions going
+        forward.
       </t>
       <section anchor="reserved-words"><name>Requirements Language</name>
       <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
@@ -105,9 +105,10 @@
       <t>
 	When TLS clients use X.509 client certificates or raw public
 	keys that are authenticated via DANE TLSA records, it is useful
-        for them to convey their intent to be authenticated via DANE, or
-        even to convey their complete DANE identity to the server. The TLS
-	extension defined in this document is used to accomplish this.
+        for them to convey their intent to be authenticated via DANE, and
+        more specifically, to convey their complete DANE identity to the
+        server. The TLS extension defined in this document is used to
+        accomplish this.
       </t>
       <t>
 	In the case of X.509 client certificates, a TLS server can
@@ -173,43 +174,38 @@ opaque ClientName<1..2^8-1>;
       </t>
       <t>
 	A TLS server implementing this specification MUST send
-	an empty extension of type "dane_clientid" to indicate that
+	an empty extension of type "dane_clientid" in its
+        CertificateRequest message, to indicate that
         it understands the extension and is capable of performing
-        DANE client authentication. In TLS 1.2, the empty extension
-        is sent in the ServerHello message. In TLS 1.3, it is sent
-        in the CertificateRequest message.
+        DANE client authentication.
       </t>
       <t>
 	A TLS client implementing this specification and intending to
         use DANE client authentication the TLS server, MUST send
-	an extension of type "dane_clientid". If the client only needs
+	an extension of type "dane_clientid" in its Certificate message.
+        Per the TLS protocol, the client is only permitted to send the
+        extension if it sees the corresponding empty extension in the
+        server's CertificateRequest message. If the client only needs
         to indicate that it has a DANE record and that the client's
         domain name identity can be obtained from its certificate, then
         the extension sent can be empty. If the client needs to send
         its domain name identity, then the "extension_data" field
         of the extension MUST contain a "ClientName" data structure
-        populated with the domain name.
-      </t>
-      <t>
-        In TLS 1.2, the client extension is sent in the ClientHello message.
-        In TLS 1.3, it is sent in the Certificate message. Additionally, in
-        TLS 1.3, the client is only permitted to send the extension if it
-        sees the corresponding empty extension in the server's
-        CertificateRequest message.
+        populated with the domain name. 
       </t>
     </section>
     <section anchor="Security" numbered="true" toc="default">
       <name>Security Considerations</name>
       <t>
-        In TLS 1.3, this extension is sent in the CertificateRequest
-        and Certificate messages, which are encrypted.
-      </t>
-      <t>
-        In TLS 1.2, this extension cannot be encrypted. When used
-        with TLS 1.2, to prevent unnecessary privacy leakage of the
-        client's name in cleartext, a TLS client implementing this
-        specification should be configured to only send this extension
-        to TLS servers it intends to perform client authentication with.
+        This extension is sent in the CertificateRequest and Certificate
+        messages, which are encrypted, and thus the client's identity
+        is protected from direct disclosure on the wire. Not however, that
+        DANE authentication typically requires the server to perform DNS
+        queries for the client's DANE record. Although, protocol
+        specifications to encrypt DNS transport exist, they are very
+        far from ubiquitously deployed. Deployers of DANCE client
+        authentication should thus evaluate the risks of the client name
+        being leaked in DNS queries performed by the TLS server.
       </t>
     </section>
     <section anchor="IANA" numbered="true" toc="default">
@@ -233,20 +229,18 @@ opaque ClientName<1..2^8-1>;
       <name>Normative References</name>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6066.xml"/>
-      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6347.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7250.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
       <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
-      <reference anchor="DANECLIENT" target="https://tools.ietf.org/html/draft-huque-dane-client-cert">
+      <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9147.xml"/>
+      <reference anchor="DANECLIENT" target="https://datatracker.ietf.org/doc/html/draft-ietf-dance-tls-clientid">
         <front>
           <title>TLS Client Authentication via DANE TLSA Records</title>
           <author fullname="Shumon Huque" initials="S" surname="Huque"/>
           <author fullname="Viktor Dukhovni" initials="V" surname="Dukhovni"/>
-          <author fullname="Ash Wilson" initials="A" surname="Wilson"/>
-          <date day="2" month="5" year="2021"/>
+          <date day="1" month="3" year="2026"/>
         </front>
       </reference>
     </references>
